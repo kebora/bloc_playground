@@ -6,22 +6,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'counter_bloc.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  final subscription = CounterBloc();
+  log("${subscription.state}");
+  subscription.stream.listen(print);
+
+  subscription.add(CounterIncrementEvent());
+  await Future.delayed(Duration.zero);
+  log("${subscription.state}");
+  subscription.add(CounterIncrementEvent());
+  await Future.delayed(Duration.zero);
+  log("${subscription.state}");
+  subscription.onEvent(CounterIncrementEvent());
+  // runApp(MaterialApp(
+  //     theme: ThemeData(
+  //     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+  // useMaterial3: true,
+  // ),
+  //   // home: const MyApp(),
+  // ),);
 }
 
+//counter and switch view
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
+  //
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      //MultiBlocProvider
-      home: MultiBlocProvider(
+    return MultiBlocProvider(
         providers: [
           BlocProvider(
             create: (context) => CounterBloc(),
@@ -31,8 +43,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: const MyAppView(),
-      ),
-    );
+      );
   }
 }
 //BlocProvider
